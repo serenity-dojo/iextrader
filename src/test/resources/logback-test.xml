@@ -10,6 +10,7 @@
     <logger name="root" level="INFO"/>
     <logger name="org.springframework" level="INFO"/>
     <logger name="org.apache.tomcat" level="WARN"/>
+    <logger name="org.apache.tomcat" level="WARN"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
