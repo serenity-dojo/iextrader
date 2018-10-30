@@ -29,15 +29,13 @@ public class WhenRegisteringANewClient {
                 .withEmail("sarah-jane@smith.com")
                 .build();
 
-        given().contentType("application/json").
-                and().body(newClient)
+        given().contentType("application/json")
+                .and().body(newClient)
                 .when().post("/client")
                 .then().statusCode(200)
                 .and().body("id", not(equalTo(0)));
 
         String clientId = SerenityRest.lastResponse().jsonPath().getString("id");
-
-        Client createdClient = SerenityRest.lastResponse().as(Client.class);
 
         given().pathParam("id", clientId)
                 .when().get("/client/{id}")
@@ -45,10 +43,5 @@ public class WhenRegisteringANewClient {
                 .and().body("email",equalTo("sarah-jane@smith.com"))
                 .and().body("firstName",equalTo("Sarah-Jane"))
                 .and().body("lastName",equalTo("Smith"));
-
-        Client foundClient = SerenityRest
-                .with().pathParam("id",clientId)
-                .get("/client/{id}").as(Client.class);
-
     }
 }
