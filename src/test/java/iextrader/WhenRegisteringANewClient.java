@@ -1,5 +1,6 @@
 package iextrader;
 
+import iextrader.model.Client;
 import io.restassured.RestAssured;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
@@ -22,11 +23,11 @@ public class WhenRegisteringANewClient {
     @Test
     public void each_new_client_should_be_given_a_unique_id() {
 
-        String newClient = "{\n" +
-                "  \"email\": \"sarah-jane@smith.com\",\n" +
-                "  \"firstName\": \"Sarah-Jane\",\n" +
-                "  \"lastName\": \"Smith\"\n" +
-                "}";
+        Client newClient = Client.Builder.aClient()
+                .withFirstName("Sarah-Jane")
+                .withLastName("Smith")
+                .withEmail("sarah-jane@smith.com")
+                .build();
 
         given().contentType("application/json").
                 and().body(newClient)
@@ -36,12 +37,18 @@ public class WhenRegisteringANewClient {
 
         String clientId = SerenityRest.lastResponse().jsonPath().getString("id");
 
+        Client createdClient = SerenityRest.lastResponse().as(Client.class);
+
         given().pathParam("id", clientId)
                 .when().get("/client/{id}")
                 .then().statusCode(200)
                 .and().body("email",equalTo("sarah-jane@smith.com"))
                 .and().body("firstName",equalTo("Sarah-Jane"))
                 .and().body("lastName",equalTo("Smith"));
+
+        Client foundClient = SerenityRest
+                .with().pathParam("id",clientId)
+                .get("/client/{id}").as(Client.class);
 
     }
 }
