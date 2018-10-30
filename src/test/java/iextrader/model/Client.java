@@ -29,6 +29,10 @@ public class Client {
         return lastName;
     }
 
+    public String toString() {
+        return firstName + " " + lastName;
+    }
+
 
     public static final class Builder {
         String id;
